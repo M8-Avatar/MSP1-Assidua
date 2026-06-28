@@ -70,7 +70,7 @@
                         Alertes
                         @php
                             try {
-                                $alertCount = \App\Models\Alerte::where('statut', 'active')->count();
+                                $alertCount = \App\Models\Alerte::where('vue_admin', false)->count();
                             } catch (\Exception $e) {
                                 $alertCount = 0;
                             }
