@@ -1,36 +1,156 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', 'Tableau de bord') — Assidua</title>
+    @vite(['resources/css/app.scss', 'resources/js/app.js'])
+</head>
+<body>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<div class="d-flex">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    {{-- ── Sidebar ── --}}
+    <aside class="sidebar">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+        {{-- Logo --}}
+        <div style="padding:24px 20px 8px;border-bottom:1px solid #EDF0F5;margin-bottom:8px">
+            <span style="font-size:1.1875rem;font-weight:700;color:#1E8296;letter-spacing:-.02em">Assidua</span>
         </div>
-    </body>
+
+        {{-- Navigation --}}
+        <nav class="sidebar-nav flex-grow-1 px-3 pt-2">
+            <ul class="nav flex-column gap-1">
+
+                @if(auth()->user()->role === 'admin')
+                <li class="nav-item">
+                    <a href="{{ route('dashboard.admin') }}"
+                       class="nav-link {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {{ request()->routeIs('apprenants.*') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Apprenants
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {{ request()->routeIs('formations.*') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        Formations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {{ request()->routeIs('presences.*') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        Présences
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link {{ request()->routeIs('alertes.*') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        Alertes
+                        @php
+                            try {
+                                $alertCount = \App\Models\Alerte::where('statut', 'active')->count();
+                            } catch (\Exception $e) {
+                                $alertCount = 0;
+                            }
+                        @endphp
+                        @if($alertCount > 0)
+                            <span class="badge bg-danger ms-auto" style="font-size:.65rem;padding:2px 6px;border-radius:10px">{{ $alertCount }}</span>
+                        @endif
+                    </a>
+                </li>
+                @else
+                <li class="nav-item">
+                    <a href="{{ route('dashboard.apprenant') }}"
+                       class="nav-link {{ request()->routeIs('dashboard.apprenant') ? 'active' : '' }}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        Mon tableau de bord
+                    </a>
+                </li>
+                @endif
+
+            </ul>
+        </nav>
+
+        {{-- Footer utilisateur --}}
+        <div style="padding:16px 20px;border-top:1px solid #EDF0F5;display:flex;align-items:center;gap:12px">
+            <div class="avatar-initials">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->name, strrpos(auth()->user()->name, ' ') + 1, 1)) }}
+            </div>
+            <div style="flex:1;min-width:0">
+                <div style="font-size:.8125rem;font-weight:600;color:#1B3A4B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                    {{ auth()->user()->name }}
+                </div>
+                <div style="font-size:.6875rem;color:#96A8B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                    {{ auth()->user()->role }}
+                </div>
+            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" title="Déconnexion"
+                        style="background:none;border:none;padding:4px;cursor:pointer;color:#96A8B8;line-height:0"
+                        onmouseover="this.style.color='#E53935'" onmouseout="this.style.color='#96A8B8'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    {{-- ── Main ── --}}
+    <div class="main-content flex-grow-1 d-flex flex-column">
+
+        {{-- Topbar --}}
+        <div class="topbar">
+            <div>
+                <h6 style="margin:0;font-weight:700;color:#1B3A4B;font-size:.9375rem">@yield('page-title', 'Tableau de bord')</h6>
+                @hasSection('page-subtitle')
+                    <div style="font-size:.75rem;color:#96A8B8;margin-top:1px">@yield('page-subtitle')</div>
+                @endif
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-initials" style="background:#EDF0F5;color:#64788A;font-size:.75rem">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->name, strrpos(auth()->user()->name, ' ') + 1, 1)) }}
+                </div>
+            </div>
+        </div>
+
+        {{-- Content --}}
+        <div class="flex-grow-1 p-4">
+            @yield('content')
+        </div>
+
+    </div>
+
+</div>
+
+</body>
 </html>
