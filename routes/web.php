@@ -21,59 +21,28 @@ Route::get('/dashboard', function () {
     return redirect()->route('dashboard.apprenant');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Admin
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
     Route::resource('apprenants', ApprenantController::class);
-});
-
-Route::middleware(['auth', 'verified', 'role:apprenant'])->group(function () {
-    Route::get('/dashboard/apprenant', [DashboardController::class, 'apprenant'])->name('dashboard.apprenant');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-// Formations (admin only)
-// Route generique : redirige vers le dashboard selon le role (appelee par les controllers Breeze)
-Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
-        return redirect()->route('dashboard.admin');
-    }
-    return redirect()->route('dashboard.apprenant');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::resource('formations', FormationController::class);
-});
-// Présences (admin only)
-// Route generique : redirige vers le dashboard selon le role (appelee par les controllers Breeze)
-Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
-        return redirect()->route('dashboard.admin');
-    }
-    return redirect()->route('dashboard.apprenant');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/presences', [PresenceController::class, 'index'])->name('presences.index');
     Route::post('/presences', [PresenceController::class, 'store'])->name('presences.store');
     Route::get('/presences/{formation_id}/{date}/pdf', [PdfController::class, 'generateFeuillePresence'])
         ->name('presences.pdf')
         ->where('date', '\d{4}-\d{2}-\d{2}');
-});
-// Alertes (admin only)
-// Route generique : redirige vers le dashboard selon le role (appelee par les controllers Breeze)
-Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
-        return redirect()->route('dashboard.admin');
-    }
-    return redirect()->route('dashboard.apprenant');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/alertes', [AlerteController::class, 'index'])->name('alertes.index');
     Route::post('/alertes/{alerte}/vue', [AlerteController::class, 'markAsRead'])->name('alertes.mark-read');
+});
+
+// Apprenant
+Route::middleware(['auth', 'verified', 'role:apprenant'])->group(function () {
+    Route::get('/dashboard/apprenant', [DashboardController::class, 'apprenant'])->name('dashboard.apprenant');
+});
+
+// Profil (tous les utilisateurs connectes)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
