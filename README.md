@@ -1,58 +1,273 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Assidua — Gestion des présences en formation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
+![Licence MIT](https://img.shields.io/badge/Licence-MIT-green)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Assidua** est une application web de gestion des présences destinée aux organismes de formation.  
+Elle permet à un administrateur de pointer les apprenants séance par séance, de suivre les taux d'assiduité en temps réel et de recevoir des alertes automatiques lorsqu'un apprenant descend sous le seuil de 75 % de présence.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Fonctionnalités principales
 
-## Learning Laravel
+| Module | Description |
+|---|---|
+| **Authentification** | Connexion sécurisée via Laravel Breeze, deux rôles : `admin` et `apprenant` |
+| **Dashboard admin** | Statistiques globales, séances récentes, alertes non vues |
+| **Dashboard apprenant** | Taux d'assiduité personnel, historique des présences |
+| **Apprenants** | CRUD complet avec recherche et filtrage par formation |
+| **Formations** | Gestion des formations (création, modification, suppression) |
+| **Saisie des présences** | Pointage par séance avec statuts : Présent / Absent / Retard / Justifié |
+| **Taux d'assiduité** | Recalcul automatique via trigger PostgreSQL après chaque pointage |
+| **Alertes** | Génération automatique si taux < 75 %, avec marquage "vue admin / vue apprenant" |
+| **Export PDF** | Feuille de présence exportable par formation et par date |
+| **Sécurité** | CSP, X-Frame-Options, Referrer-Policy, politique de complexité des mots de passe |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Stack technique
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Couche | Technologie |
+|---|---|
+| Backend | PHP 8.3 · Laravel 13 · Laravel Breeze |
+| Base de données | PostgreSQL 17 (triggers natifs pour taux + alertes) |
+| Frontend | Bootstrap 5.3 · Sass · Vite 8 |
+| Authentification | Laravel Breeze (sessions, middleware rôles) |
+| Moteur de templates | Blade |
+| PDF | (DomPDF / Browsershot — selon configuration) |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Installation
+
+### Prérequis
+
+- PHP ≥ 8.2 avec extensions `pdo_pgsql`, `mbstring`, `openssl`, `tokenizer`, `xml`
+- PostgreSQL ≥ 14
+- Composer ≥ 2
+- Node.js ≥ 20 · npm ≥ 10
+
+### 1. Cloner le dépôt
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/<votre-compte>/MSP1-Assidua.git
+cd MSP1-Assidua
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Installer les dépendances PHP
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Installer les dépendances JS et compiler les assets
 
-## Code of Conduct
+```bash
+npm install
+npm run build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+> En développement, lancez `npm run dev` dans un terminal séparé pour activer le Hot Module Replacement de Vite.
 
-## Security Vulnerabilities
+### 4. Configurer l'environnement
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## License
+Éditez `.env` et renseignez vos paramètres PostgreSQL :
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```dotenv
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=assidua
+DB_USERNAME=postgres
+DB_PASSWORD=votre_mot_de_passe
+
+APP_URL=http://localhost:8000
+APP_LOCALE=fr
+```
+
+### 5. Créer la base de données
+
+```sql
+-- Dans psql ou pgAdmin :
+CREATE DATABASE assidua;
+```
+
+### 6. Exécuter les migrations
+
+```bash
+php artisan migrate
+```
+
+Les migrations créent les tables suivantes et installent les **triggers PostgreSQL** :
+- `trigger_recalcul_taux` — recalcule `assiduites.taux` après chaque présence
+- `trigger_alerte_assiduité` — insère une alerte si `taux < 75 %`
+
+### 7. Peupler la base de données (données de démonstration)
+
+```bash
+php artisan db:seed
+```
+
+Le seeder génère :
+- 1 compte admin · 10 apprenants
+- 3 formations · 23 inscriptions
+- Des centaines de présences réparties sur plusieurs mois
+- Des taux d'assiduité calculés automatiquement par les triggers
+
+### 8. Lancer le serveur
+
+```bash
+php artisan serve
+```
+
+L'application est accessible sur `http://localhost:8000`.
+
+---
+
+## Comptes de test
+
+> Mot de passe universel : **`password`**
+
+| Rôle | Nom | Email |
+|---|---|---|
+| **Admin** | Marie Laurent | `admin@assidua.fr` |
+| Apprenant | Thomas Dupont | `thomas.dupont@apprenant.fr` |
+| Apprenant | Sophie Martin | `sophie.martin@apprenant.fr` |
+| Apprenant | Emma Petit | `emma.petit@apprenant.fr` |
+| Apprenant | Maxime Roux | `maxime.roux@apprenant.fr` |
+
+Les apprenants ont des profils d'assiduité variés (excellent, bon, fragile, problématique) pour permettre de tester toutes les situations d'alerte.
+
+---
+
+## Captures d'écran
+
+> Les captures ci-dessous illustrent les pages principales de l'application.
+
+### Page de connexion
+![Login](public/images/screenshots/login.png)
+
+### Dashboard administrateur
+![Dashboard Admin](public/images/screenshots/dashboard-admin.png)
+
+### Saisie des présences
+![Présences](public/images/screenshots/presences.png)
+
+### Dashboard apprenant
+![Dashboard Apprenant](public/images/screenshots/dashboard-apprenant.png)
+
+### Liste des apprenants
+![Apprenants](public/images/screenshots/apprenants.png)
+
+---
+
+## Architecture du projet
+
+```
+MSP1-Assidua/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── ApprenantController.php     # CRUD apprenants
+│   │   │   ├── DashboardController.php     # Vues admin + apprenant
+│   │   │   ├── FormationController.php     # CRUD formations
+│   │   │   ├── PresenceController.php      # Saisie des présences
+│   │   │   ├── AlerteController.php        # Gestion des alertes
+│   │   │   ├── PdfController.php           # Export PDF
+│   │   │   └── ProfileController.php       # Profil utilisateur
+│   │   └── Middleware/
+│   │       ├── EnsureRole.php              # Vérification du rôle (admin/apprenant)
+│   │       └── SecurityHeaders.php         # CSP + headers de sécurité
+│   └── Models/
+│       ├── User.php
+│       ├── Formation.php
+│       ├── Inscription.php
+│       ├── Presence.php
+│       ├── Assiduite.php
+│       ├── Alerte.php
+│       └── Animation.php
+├── database/
+│   ├── migrations/                         # Schéma + triggers PostgreSQL
+│   └── seeders/
+│       └── DatabaseSeeder.php              # Données de démonstration réalistes
+├── resources/
+│   ├── css/
+│   │   └── app.scss                        # Design system Assidua (couleur #1E8296)
+│   ├── js/
+│   │   └── app.js
+│   └── views/
+│       ├── layouts/
+│       │   ├── app.blade.php               # Layout principal (sidebar + topbar)
+│       │   └── guest.blade.php             # Layout authentification
+│       ├── dashboard/
+│       │   ├── admin.blade.php
+│       │   └── apprenant.blade.php
+│       ├── presences/
+│       │   └── index.blade.php             # Pointage interactif temps réel
+│       ├── apprenants/                     # CRUD apprenants
+│       ├── formations/                     # CRUD formations
+│       └── auth/                           # Vues Breeze (login, register…)
+└── routes/
+    └── web.php                             # Routes avec middleware rôles
+```
+
+### Schéma de la base de données
+
+```
+users ──────────────────────────────────────────────┐
+  id, nom, prenom, email, role                      │
+       │                                            │
+       └── inscriptions ──────── formations         │
+             id, user_id,          id, nom,         │
+             formations_id         date_debut/fin    │
+                  │                                 │
+                  ├── presences                     │
+                  │     id, inscription_id,         │
+                  │     date, statut, observation   │
+                  │     ▲ TRIGGER → recalcul taux   │
+                  │                                 │
+                  └── assiduites                    │
+                        id, inscription_id, taux    │
+                        ▲ TRIGGER → alerte si <75%  │
+                              │                     │
+                              └── alertes           │
+                                    id,             │
+                                    assiduite_id,   │
+                                    date_alerte,    │
+                                    vue_admin,      │
+                                    vue_apprenant   │
+                                                    │
+animations ─────────────────────────────────────────┘
+  id, user_id, formations_id
+```
+
+**Triggers PostgreSQL :**
+- `trigger_recalcul_taux` — AFTER INSERT/UPDATE/DELETE sur `presences` → met à jour `assiduites.taux`
+- `trigger_alerte_assiduité` — AFTER INSERT/UPDATE OF taux sur `assiduites` → insère dans `alertes` si taux < 75 % (contrainte `UNIQUE(assiduite_id)` empêche les doublons)
+
+---
+
+## Sécurité
+
+- **Politique de mots de passe** : 8 caractères minimum, majuscule, chiffre, caractère spécial, vérification HaveIBeenPwned (création de compte)
+- **Content Security Policy** : header CSP appliqué sur toutes les réponses via middleware
+- **Protection CSRF** : token Blade `@csrf` sur tous les formulaires POST
+- **Contrôle d'accès** : middleware `role:admin` et `role:apprenant` sur chaque groupe de routes
+- **En production** : remplacer `'unsafe-inline'` dans le CSP par des nonces Vite
+
+---
+
+## Licence
+
+Ce projet est distribué sous licence **MIT**.  
+Voir le fichier [LICENSE](LICENSE) pour les détails.
