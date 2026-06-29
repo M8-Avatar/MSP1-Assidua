@@ -1,4 +1,4 @@
-﻿# Spec : Authentification Breeze + Design Assidua
+# Spec : Authentification Breeze + Design Assidua
 
 **Date :** 2026-06-29  
 **Projet :** Assidua — Gestion assiduité pour organismes de formation  
