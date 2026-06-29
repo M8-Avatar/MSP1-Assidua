@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Tableau de bord') — Assidua</title>
+    <title>@yield('title', 'Tableau de bord') ? Assidua</title>
     @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -22,7 +22,7 @@
 
 <div class="d-flex">
 
-    {{-- ── Sidebar ── --}}
+    {{-- Sidebar --}}
     <aside class="sidebar">
 
         {{-- Logo --}}
@@ -34,10 +34,15 @@
         <nav class="sidebar-nav flex-grow-1 px-3 pt-2">
             <ul class="nav flex-column gap-1">
 
-                @if(auth()->user()->role === 'admin')
+                {{-- Dashboard : lien adaptatif selon le role --}}
                 <li class="nav-item">
+                    @if(auth()->user()->role === 'admin')
                     <a href="{{ route('dashboard.admin') }}"
-                       class="nav-link {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                       class="nav-link {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
+                    @else
+                    <a href="{{ route('dashboard.apprenant') }}"
+                       class="nav-link {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
+                    @endif
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
                             <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
@@ -45,8 +50,13 @@
                         Dashboard
                     </a>
                 </li>
+
+                {{-- Liens reserves a l'admin --}}
+                @if(auth()->user()->role === 'admin')
+
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('apprenants.*') ? 'active' : '' }}">
+                    <a href="{{ route('apprenants.index') }}"
+                       class="nav-link {{ request()->routeIs('apprenants.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="9" cy="7" r="4"/>
@@ -55,8 +65,10 @@
                         Apprenants
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{{ route('formations.index') }}" class="nav-link {{ request()->routeIs('formations.*') ? 'active' : '' }}">
+                    <a href="{{ route('formations.index') }}"
+                       class="nav-link {{ request()->routeIs('formations.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
@@ -64,17 +76,21 @@
                         Formations
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('presences.*') ? 'active' : '' }}">
+                    <a href="{{ route('presences.index') }}"
+                       class="nav-link {{ request()->routeIs('presences.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 11l3 3L22 4"/>
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                         </svg>
-                        Présences
+                        Presences
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{{ route('alertes.index') }}" class="nav-link {{ request()->routeIs('alertes.*') ? 'active' : '' }}">
+                    <a href="{{ route('alertes.index') }}"
+                       class="nav-link {{ request()->routeIs('alertes.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -92,17 +108,7 @@
                         @endif
                     </a>
                 </li>
-                @else
-                <li class="nav-item">
-                    <a href="{{ route('dashboard.apprenant') }}"
-                       class="nav-link {{ request()->routeIs('dashboard.apprenant') ? 'active' : '' }}">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-                        </svg>
-                        Mon tableau de bord
-                    </a>
-                </li>
+
                 @endif
 
             </ul>
@@ -121,7 +127,7 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" title="Déconnexion"
+                <button type="submit" title="Deconnexion"
                         style="background:none;border:none;padding:4px;cursor:pointer;color:#96A8B8;line-height:0"
                         onmouseover="this.style.color='#E53935'" onmouseout="this.style.color='#96A8B8'">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -135,7 +141,7 @@
 
     </aside>
 
-    {{-- ── Main ── --}}
+    {{-- Main --}}
     <div class="main-content flex-grow-1 d-flex flex-column">
 
         {{-- Topbar --}}
