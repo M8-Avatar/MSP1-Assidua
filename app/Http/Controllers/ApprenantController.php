@@ -80,6 +80,19 @@ class ApprenantController extends Controller
         return redirect()->route('apprenants.index')
             ->with('success', 'Apprenant cree avec succes.');
     }
+    public function show(User $apprenant)
+    {
+        abort_if($apprenant->role !== 'apprenant', 404);
+
+        $apprenant->load([
+            'inscriptions.formation',
+            'inscriptions.assiduite',
+            'inscriptions.presences',
+        ]);
+
+        return view('apprenants.show', compact('apprenant'));
+    }
+
 
     public function edit(User $apprenant)
     {
