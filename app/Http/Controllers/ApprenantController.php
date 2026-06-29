@@ -7,6 +7,7 @@ use App\Models\Inscription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ApprenantController extends Controller
 {
@@ -48,7 +49,7 @@ class ApprenantController extends Controller
             'nom'          => 'required|string|max:100',
             'prenom'       => 'required|string|max:100',
             'email'        => 'required|email|unique:users,email',
-            'password'     => 'required|string|min:8|confirmed',
+            'password'     => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised()],
             'formation_id' => 'nullable|exists:formations,id',
         ], [
             'nom.required'       => 'Le nom est obligatoire.',
@@ -98,7 +99,7 @@ class ApprenantController extends Controller
             'nom'          => 'required|string|max:100',
             'prenom'       => 'required|string|max:100',
             'email'        => 'required|email|unique:users,email,' . $apprenant->id,
-            'password'     => 'nullable|string|min:8|confirmed',
+            'password'     => ['nullable', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             'formation_id' => 'nullable|exists:formations,id',
         ], [
             'nom.required'       => 'Le nom est obligatoire.',

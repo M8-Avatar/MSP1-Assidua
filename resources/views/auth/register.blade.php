@@ -26,6 +26,7 @@
                             required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <p class="mt-1 text-xs" style="color:#96A8B8">8 caractères minimum, une majuscule, un chiffre, un caractère spécial</p>
         </div>
 
         <!-- Confirm Password -->
