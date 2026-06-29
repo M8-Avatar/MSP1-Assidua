@@ -75,6 +75,9 @@ return new class extends Migration
             \$\$ LANGUAGE plpgsql;
         ");
 
+        // Contrainte unique : une seule alerte active par apprenant
+        DB::unprepared("ALTER TABLE alertes ADD CONSTRAINT alertes_assiduite_unique UNIQUE (assiduite_id)");
+
         DB::unprepared("
             CREATE TRIGGER trigger_alerte_assiduité
             AFTER INSERT OR UPDATE OF taux ON assiduites
@@ -84,6 +87,7 @@ return new class extends Migration
 
     public function down(): void
     {
+        DB::unprepared("ALTER TABLE alertes DROP CONSTRAINT IF EXISTS alertes_assiduite_unique");
         DB::unprepared("DROP TRIGGER IF EXISTS trigger_alerte_assiduité ON assiduites");
         DB::unprepared("DROP TRIGGER IF EXISTS trigger_recalcul_taux ON presences");
         DB::unprepared("DROP FUNCTION IF EXISTS generer_alerte()");
