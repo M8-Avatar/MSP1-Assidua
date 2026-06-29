@@ -17,7 +17,7 @@
         {{-- Logo top-left --}}
         <div style="position:absolute;top:32px;left:40px;z-index:2">
             <img src="{{ asset('images/logo-vertical.png') }}"
-                 style="height:80px;width:auto;filter:brightness(0) invert(1)"
+                 style="height:72px;width:auto;filter:brightness(0) invert(1)"
                  alt="Assidua">
         </div>
 
@@ -27,7 +27,7 @@
 
         {{-- Logo sur carte blanche --}}
         <div style="background:#fff;border-radius:20px;padding:20px 40px;box-shadow:0 24px 64px rgba(0,0,0,.22);margin-bottom:48px;position:relative;z-index:1">
-            <img src="{{ asset('images/logo-horizontal.png') }}" style="height:32px;width:auto" alt="Assidua">
+            <img src="{{ asset('images/logo-horizontal.png') }}" style="height:36px;width:auto" alt="Assidua">
         </div>
 
         <h2 style="color:#fff;font-size:1.4375rem;font-weight:700;text-align:center;max-width:400px;line-height:1.45;margin-bottom:14px;position:relative;z-index:1">
@@ -62,7 +62,7 @@
 
             {{-- Logo au-dessus du formulaire --}}
             <div style="margin-bottom:32px;text-align:center">
-                <img src="{{ asset('images/logo-horizontal.png') }}" style="height:32px;width:auto" alt="Assidua">
+                <img src="{{ asset('images/logo-horizontal.png') }}" style="height:36px;width:auto" alt="Assidua">
             </div>
 
             @yield('content')

@@ -91,7 +91,17 @@
 <div class="header">
     <div class="header-top">
         <div>
-            <div class="brand">Assidua</div>
+            @php
+                $logoPath = public_path('images/logo-horizontal.png');
+                $logoSrc  = file_exists($logoPath)
+                    ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+                    : '';
+            @endphp
+            @if($logoSrc)
+                <img src="{{ $logoSrc }}" style="height:48px;width:auto;display:block" alt="Assidua">
+            @else
+                <div class="brand">Assidua</div>
+            @endif
             <div class="brand-sub">Gestion des présences</div>
         </div>
         <div class="header-meta">

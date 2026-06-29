@@ -53,11 +53,11 @@ class ApprenantController extends Controller
             'formation_id' => 'nullable|exists:formations,id',
         ], [
             'nom.required'       => 'Le nom est obligatoire.',
-            'prenom.required'    => 'Le prenom est obligatoire.',
-            'email.required'     => "L'email est obligatoire.",
-            'email.unique'       => 'Cet email est deja utilise.',
+            'prenom.required'    => 'Le prénom est obligatoire.',
+            'email.required'     => "L'adresse e-mail est obligatoire.",
+            'email.email'        => "L'adresse e-mail n'est pas valide.",
+            'email.unique'       => 'Cette adresse e-mail est déjà utilisée.',
             'password.required'  => 'Le mot de passe est obligatoire.',
-            'password.min'       => 'Le mot de passe doit contenir au moins 8 caracteres.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
         ]);
 
@@ -78,8 +78,9 @@ class ApprenantController extends Controller
         }
 
         return redirect()->route('apprenants.index')
-            ->with('success', 'Apprenant cree avec succes.');
+            ->with('success', 'Apprenant créé avec succès.');
     }
+
     public function show(User $apprenant)
     {
         abort_if($apprenant->role !== 'apprenant', 404);
@@ -92,7 +93,6 @@ class ApprenantController extends Controller
 
         return view('apprenants.show', compact('apprenant'));
     }
-
 
     public function edit(User $apprenant)
     {
@@ -116,10 +116,10 @@ class ApprenantController extends Controller
             'formation_id' => 'nullable|exists:formations,id',
         ], [
             'nom.required'       => 'Le nom est obligatoire.',
-            'prenom.required'    => 'Le prenom est obligatoire.',
-            'email.required'     => "L'email est obligatoire.",
-            'email.unique'       => 'Cet email est deja utilise.',
-            'password.min'       => 'Le mot de passe doit contenir au moins 8 caracteres.',
+            'prenom.required'    => 'Le prénom est obligatoire.',
+            'email.required'     => "L'adresse e-mail est obligatoire.",
+            'email.email'        => "L'adresse e-mail n'est pas valide.",
+            'email.unique'       => 'Cette adresse e-mail est déjà utilisée.',
             'password.confirmed' => 'Les mots de passe ne correspondent pas.',
         ]);
 
@@ -149,7 +149,7 @@ class ApprenantController extends Controller
         }
 
         return redirect()->route('apprenants.index')
-            ->with('success', 'Apprenant mis a jour avec succes.');
+            ->with('success', 'Apprenant mis à jour avec succès.');
     }
 
     public function destroy(User $apprenant)
@@ -158,6 +158,6 @@ class ApprenantController extends Controller
         $apprenant->delete();
 
         return redirect()->route('apprenants.index')
-            ->with('success', 'Apprenant supprime avec succes.');
+            ->with('success', 'Apprenant supprimé avec succès.');
     }
 }

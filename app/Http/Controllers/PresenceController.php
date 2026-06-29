@@ -49,6 +49,14 @@ class PresenceController extends Controller
             'presences.*.inscription_id' => 'required|exists:inscriptions,id',
             'presences.*.statut'         => 'required|in:present,absent,retard,absent_justifie',
             'presences.*.observation'    => 'nullable|string|max:255',
+        ], [
+            'formation_id.required'      => 'Veuillez sélectionner une formation.',
+            'formation_id.exists'        => 'La formation sélectionnée est invalide.',
+            'date.required'              => 'La date de séance est obligatoire.',
+            'date.date'                  => 'La date de séance n\'est pas valide.',
+            'presences.required'         => 'Aucune présence à enregistrer.',
+            'presences.*.statut.required' => 'Le statut de chaque apprenant est obligatoire.',
+            'presences.*.statut.in'      => 'Le statut sélectionné est invalide.',
         ]);
 
         DB::transaction(function () use ($request) {

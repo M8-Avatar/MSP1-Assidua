@@ -86,7 +86,7 @@
                             <path d="M9 11l3 3L22 4"/>
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
                         </svg>
-                        Presences
+                        Présences
                     </a>
                 </li>
 
@@ -129,7 +129,7 @@
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" title="Deconnexion"
+                <button type="submit" title="Déconnexion"
                         style="background:none;border:none;padding:4px;cursor:pointer;color:#96A8B8;line-height:0"
                         onmouseover="this.style.color='#E53935'" onmouseout="this.style.color='#96A8B8'">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
