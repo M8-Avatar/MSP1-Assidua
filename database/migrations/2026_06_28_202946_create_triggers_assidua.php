@@ -7,7 +7,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Fonction + Trigger 1 : recalcul du taux d'assiduité
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::unprepared("
             CREATE OR REPLACE FUNCTION recalculer_taux()
             RETURNS TRIGGER AS \$\$
@@ -17,7 +20,6 @@ return new class extends Migration
                 presents  INT;
                 nouveau_taux NUMERIC(5,2);
             BEGIN
-                -- Sur DELETE, on utilise OLD ; sinon NEW
                 IF TG_OP = 'DELETE' THEN
                     ref_inscription := OLD.inscription_id;
                 ELSE
@@ -60,7 +62,6 @@ return new class extends Migration
             FOR EACH ROW EXECUTE FUNCTION recalculer_taux();
         ");
 
-        // Fonction + Trigger 2 : alerte automatique si taux < 75%
         DB::unprepared("
             CREATE OR REPLACE FUNCTION generer_alerte()
             RETURNS TRIGGER AS \$\$
@@ -75,7 +76,6 @@ return new class extends Migration
             \$\$ LANGUAGE plpgsql;
         ");
 
-        // Contrainte unique : une seule alerte active par apprenant
         DB::unprepared("ALTER TABLE alertes ADD CONSTRAINT alertes_assiduite_unique UNIQUE (assiduite_id)");
 
         DB::unprepared("
@@ -87,6 +87,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::unprepared("ALTER TABLE alertes DROP CONSTRAINT IF EXISTS alertes_assiduite_unique");
         DB::unprepared("DROP TRIGGER IF EXISTS trigger_alerte_assiduité ON assiduites");
         DB::unprepared("DROP TRIGGER IF EXISTS trigger_recalcul_taux ON presences");
