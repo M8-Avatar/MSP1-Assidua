@@ -6,7 +6,6 @@ use App\Models\Alerte;
 use App\Models\Formation;
 use App\Models\Inscription;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -27,9 +26,10 @@ class DashboardController extends Controller
 
             $sessions_recentes = DB::table('presences')
                 ->join('inscriptions', 'presences.inscription_id', '=', 'inscriptions.id')
-                ->join('formations', 'inscriptions.formation_id', '=', 'formations.id')
+                ->join('formations', 'inscriptions.formations_id', '=', 'formations.id')
                 ->select(
                     'presences.date',
+                    'formations.id as formation_id',
                     'formations.nom',
                     DB::raw('COUNT(*) as nb_presences')
                 )
@@ -46,61 +46,39 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             $stats = ['apprenants' => 0, 'formations' => 0, 'seances_mois' => 0, 'alertes' => 0];
             $sessions_recentes = collect();
-            $alertes_recentes = collect();
+            $alertes_recentes  = collect();
         }
 
         return view('dashboard.admin', compact('stats', 'sessions_recentes', 'alertes_recentes'));
     }
 
-    public function apprenant(Request $request)
+    public function apprenant()
     {
-        $user = $request->user();
-
         try {
-            $inscription = Inscription::with(['formation', 'assiduite'])
-                ->where('user_id', $user->id)
-                ->latest()
+            $inscription = Inscription::where('user_id', auth()->id())
+                ->with([
+                    'formation',
+                    'assiduite',
+                    'presences' => fn($q) => $q->orderByDesc('date'),
+                ])
                 ->first();
 
-            $assiduite = $inscription?->assiduite;
+            $taux = (float) ($inscription?->assiduite?->taux ?? 0);
 
-            $presences_counts = collect([
-                'present'         => 0,
-                'absent'          => 0,
-                'retard'          => 0,
-                'absent_justifie' => 0,
-            ]);
+            $presences_counts = ['present' => 0, 'absent' => 0, 'retard' => 0, 'absent_justifie' => 0];
             if ($inscription) {
-                $rows = DB::table('presences')
-                    ->where('inscription_id', $inscription->id)
-                    ->select('statut', DB::raw('COUNT(*) as total'))
-                    ->groupBy('statut')
-                    ->pluck('total', 'statut');
-                $presences_counts = $presences_counts->merge($rows);
-            }
-
-            $presences_recentes = collect();
-            if ($inscription) {
-                $presences_recentes = DB::table('presences')
-                    ->join('inscriptions', 'presences.inscription_id', '=', 'inscriptions.id')
-                    ->join('formations', 'inscriptions.formation_id', '=', 'formations.id')
-                    ->where('presences.inscription_id', $inscription->id)
-                    ->select('presences.*', 'formations.nom as formation_nom')
-                    ->orderByDesc('presences.date')
-                    ->limit(10)
-                    ->get();
+                foreach ($inscription->presences as $p) {
+                    if (array_key_exists($p->statut, $presences_counts)) {
+                        $presences_counts[$p->statut]++;
+                    }
+                }
             }
         } catch (\Exception $e) {
             $inscription      = null;
-            $assiduite        = null;
-            $presences_counts = collect([
-                'present' => 0, 'absent' => 0, 'retard' => 0, 'absent_justifie' => 0,
-            ]);
-            $presences_recentes = collect();
+            $taux             = 0.0;
+            $presences_counts = ['present' => 0, 'absent' => 0, 'retard' => 0, 'absent_justifie' => 0];
         }
 
-        return view('dashboard.apprenant', compact(
-            'user', 'inscription', 'assiduite', 'presences_counts', 'presences_recentes'
-        ));
+        return view('dashboard.apprenant', compact('inscription', 'taux', 'presences_counts'));
     }
 }

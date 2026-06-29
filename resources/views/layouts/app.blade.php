@@ -8,6 +8,18 @@
 </head>
 <body>
 
+@php
+    $_u           = auth()->user();
+    $_displayName = ($_u->nom && $_u->prenom)
+                        ? $_u->prenom . ' ' . $_u->nom
+                        : $_u->name;
+    $_initial1    = $_u->prenom ? strtoupper(substr($_u->prenom, 0, 1))
+                                : strtoupper(substr($_u->name, 0, 1));
+    $_initial2    = $_u->nom    ? strtoupper(substr($_u->nom, 0, 1))
+                                : strtoupper(substr($_u->name, strrpos($_u->name, ' ') + 1, 1));
+    $_roleLabel   = ucfirst($_u->role ?? '');
+@endphp
+
 <div class="d-flex">
 
     {{-- ── Sidebar ── --}}
@@ -44,7 +56,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('formations.*') ? 'active' : '' }}">
+                    <a href="{{ route('formations.index') }}" class="nav-link {{ request()->routeIs('formations.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
@@ -62,7 +74,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('alertes.*') ? 'active' : '' }}">
+                    <a href="{{ route('alertes.index') }}" class="nav-link {{ request()->routeIs('alertes.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -98,15 +110,13 @@
 
         {{-- Footer utilisateur --}}
         <div style="padding:16px 20px;border-top:1px solid #EDF0F5;display:flex;align-items:center;gap:12px">
-            <div class="avatar-initials">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->name, strrpos(auth()->user()->name, ' ') + 1, 1)) }}
-            </div>
+            <div class="avatar-initials">{{ $_initial1 }}{{ $_initial2 }}</div>
             <div style="flex:1;min-width:0">
                 <div style="font-size:.8125rem;font-weight:600;color:#1B3A4B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                    {{ auth()->user()->name }}
+                    {{ $_displayName }}
                 </div>
                 <div style="font-size:.6875rem;color:#96A8B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                    {{ auth()->user()->role }}
+                    {{ $_roleLabel }}
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}">
@@ -138,10 +148,26 @@
             </div>
             <div class="d-flex align-items-center gap-3">
                 <div class="avatar-initials" style="background:#EDF0F5;color:#64788A;font-size:.75rem">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->name, strrpos(auth()->user()->name, ' ') + 1, 1)) }}
+                    {{ $_initial1 }}{{ $_initial2 }}
                 </div>
             </div>
         </div>
+
+        {{-- Flash messages --}}
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mx-4 mt-3 mb-0" role="alert"
+                 style="border-left:4px solid #1E8296;background:#EAF6F8;color:#1B3A4B;border-radius:6px;font-size:.875rem">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mx-4 mt-3 mb-0" role="alert"
+                 style="border-left:4px solid #E53935;border-radius:6px;font-size:.875rem">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+            </div>
+        @endif
 
         {{-- Content --}}
         <div class="flex-grow-1 p-4">

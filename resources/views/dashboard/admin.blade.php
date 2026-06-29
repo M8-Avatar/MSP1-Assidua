@@ -66,11 +66,11 @@
 
 </div>
 
-<div class="row g-3">
+<div class="row g-3 align-items-stretch">
 
     {{-- Seances recentes --}}
-    <div class="col-xl-7">
-        <div class="card border-0" style="border-radius:.8125rem;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+    <div class="col-lg-7">
+        <div class="card h-100 border-0" style="border-radius:.8125rem;box-shadow:0 1px 3px rgba(0,0,0,.05)">
             <div class="card-header bg-white border-0 pb-0" style="padding:1.25rem 1.5rem .75rem">
                 <h6 style="margin:0;font-size:.875rem;font-weight:700;color:#1B3A4B">Seances recentes</h6>
             </div>
@@ -80,7 +80,8 @@
                         <tr>
                             <th>Formation</th>
                             <th>Date</th>
-                            <th>Presents</th>
+                            <th>Présents</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,10 +98,24 @@
                                     {{ $s->nb_presences }}
                                 </span>
                             </td>
+                            <td style="text-align:right">
+                                <a href="{{ route('presences.pdf', ['formation_id' => $s->formation_id, 'date' => $s->date]) }}"
+                                   target="_blank"
+                                   title="Exporter la feuille de présence en PDF"
+                                   style="display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;color:#1E8296;text-decoration:none;padding:3px 8px;border:1px solid #1E8296;border-radius:6px;white-space:nowrap">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="12" y1="18" x2="12" y2="12"/>
+                                        <line x1="9" y1="15" x2="15" y2="15"/>
+                                    </svg>
+                                    PDF
+                                </a>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" style="text-align:center;color:#96A8B8;padding:2rem">
+                            <td colspan="4" style="text-align:center;color:#96A8B8;padding:2rem">
                                 Aucune séance enregistrée.
                             </td>
                         </tr>
@@ -112,8 +127,8 @@
     </div>
 
     {{-- Alertes non vues --}}
-    <div class="col-xl-5">
-        <div class="card border-0" style="border-radius:.8125rem;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+    <div class="col-lg-5">
+        <div class="card h-100 border-0" style="border-radius:.8125rem;box-shadow:0 1px 3px rgba(0,0,0,.05)">
             <div class="card-header bg-white border-0 pb-0" style="padding:1.25rem 1.5rem .75rem;display:flex;align-items:center;justify-content:space-between">
                 <h6 style="margin:0;font-size:.875rem;font-weight:700;color:#1B3A4B">Alertes non vues</h6>
                 @if($stats['alertes'] > 0)
