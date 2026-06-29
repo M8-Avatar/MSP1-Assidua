@@ -10,8 +10,7 @@ class AuthRedirectTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function admin_redirige_vers_dashboard_admin_apres_login(): void
+    public function test_admin_redirige_vers_dashboard_admin_apres_login(): void
     {
         $admin = User::factory()->admin()->create();
 
@@ -21,8 +20,7 @@ class AuthRedirectTest extends TestCase
         ])->assertRedirect(route('dashboard.admin'));
     }
 
-    /** @test */
-    public function apprenant_redirige_vers_dashboard_apprenant_apres_login(): void
+    public function test_apprenant_redirige_vers_dashboard_apprenant_apres_login(): void
     {
         $apprenant = User::factory()->apprenant()->create();
 

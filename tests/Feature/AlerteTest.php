@@ -34,8 +34,7 @@ class AlerteTest extends TestCase
         return compact('apprenant', 'formation', 'inscription', 'assiduite');
     }
 
-    /** @test */
-    public function alerte_creee_quand_taux_inferieur_a_75(): void
+    public function test_alerte_creee_quand_taux_inferieur_a_75(): void
     {
         ['assiduite' => $assiduite] = $this->creerContexteApprenant(60.0);
 
@@ -53,17 +52,15 @@ class AlerteTest extends TestCase
         $this->assertLessThan(75, $assiduite->taux);
     }
 
-    /** @test */
-    public function aucune_alerte_ne_doit_exister_pour_taux_superieur_ou_egal_a_75(): void
+    public function test_aucune_alerte_pour_taux_superieur_ou_egal_a_75(): void
     {
         $this->creerContexteApprenant(80.0);
 
-        // Le trigger ne crée pas d'alerte si taux >= 75
+        // Le trigger ne cree pas d alerte si taux >= 75
         $this->assertDatabaseCount('alertes', 0);
     }
 
-    /** @test */
-    public function alerte_visible_sur_page_admin(): void
+    public function test_alerte_visible_sur_page_admin(): void
     {
         $admin                      = User::factory()->admin()->create();
         ['assiduite' => $assiduite] = $this->creerContexteApprenant(50.0);
@@ -80,8 +77,7 @@ class AlerteTest extends TestCase
              ->assertSee('Formation Test');
     }
 
-    /** @test */
-    public function alerte_peut_etre_marquee_comme_vue(): void
+    public function test_alerte_peut_etre_marquee_comme_vue(): void
     {
         $admin                      = User::factory()->admin()->create();
         ['assiduite' => $assiduite] = $this->creerContexteApprenant(40.0);
@@ -92,9 +88,10 @@ class AlerteTest extends TestCase
             'vue_apprenant' => false,
         ]);
 
+        // markAsRead redirige vers /alertes avec le filtre courant
         $this->actingAs($admin)
              ->post(route('alertes.mark-read', $alerte))
-             ->assertRedirect(route('alertes.index'));
+             ->assertRedirectContains('/alertes');
 
         $this->assertDatabaseHas('alertes', [
             'id'        => $alerte->id,

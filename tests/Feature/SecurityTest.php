@@ -10,14 +10,12 @@ class SecurityTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function route_apprenants_redirige_vers_login_sans_authentification(): void
+    public function test_route_apprenants_redirige_vers_login_sans_authentification(): void
     {
         $this->get('/apprenants')->assertRedirect('/login');
     }
 
-    /** @test */
-    public function route_apprenants_retourne_403_avec_role_apprenant(): void
+    public function test_route_apprenants_retourne_403_avec_role_apprenant(): void
     {
         $apprenant = User::factory()->apprenant()->create();
 
@@ -26,8 +24,7 @@ class SecurityTest extends TestCase
              ->assertStatus(403);
     }
 
-    /** @test */
-    public function route_apprenants_accessible_avec_role_admin(): void
+    public function test_route_apprenants_accessible_avec_role_admin(): void
     {
         $admin = User::factory()->admin()->create();
 
@@ -36,14 +33,12 @@ class SecurityTest extends TestCase
              ->assertStatus(200);
     }
 
-    /** @test */
-    public function route_formations_redirige_vers_login_sans_authentification(): void
+    public function test_route_formations_redirige_vers_login_sans_authentification(): void
     {
         $this->get('/formations')->assertRedirect('/login');
     }
 
-    /** @test */
-    public function route_alertes_retourne_403_avec_role_apprenant(): void
+    public function test_route_alertes_retourne_403_avec_role_apprenant(): void
     {
         $apprenant = User::factory()->apprenant()->create();
 
