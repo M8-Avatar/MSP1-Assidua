@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Creation du compte admin...');
         $adminId = DB::table('users')->insertGetId([
+            'nom'        => 'Laurent',
+            'prenom'     => 'Marie',
             'name'       => 'Marie Laurent',
             'email'      => 'admin@assidua.fr',
             'password'   => Hash::make('password'),
@@ -40,24 +42,27 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->command->info('Creation des apprenants...');
+        // [prenom, nom, email]
         $apprenants = [
-            ['Thomas Dupont',    'thomas.dupont@apprenant.fr'],
-            ['Sophie Martin',    'sophie.martin@apprenant.fr'],
-            ['Lucas Bernard',    'lucas.bernard@apprenant.fr'],
-            ['Emma Petit',       'emma.petit@apprenant.fr'],
-            ['Nathan Moreau',    'nathan.moreau@apprenant.fr'],
-            ['Chloe Simon',      'chloe.simon@apprenant.fr'],
-            ['Antoine Lefebvre', 'antoine.lefebvre@apprenant.fr'],
-            ['Ines Leroy',       'ines.leroy@apprenant.fr'],
-            ['Maxime Roux',      'maxime.roux@apprenant.fr'],
-            ['Camille Girard',   'camille.girard@apprenant.fr'],
+            ['Thomas',  'Dupont',    'thomas.dupont@apprenant.fr'],
+            ['Sophie',  'Martin',    'sophie.martin@apprenant.fr'],
+            ['Lucas',   'Bernard',   'lucas.bernard@apprenant.fr'],
+            ['Emma',    'Petit',     'emma.petit@apprenant.fr'],
+            ['Nathan',  'Moreau',    'nathan.moreau@apprenant.fr'],
+            ['Chloe',   'Simon',     'chloe.simon@apprenant.fr'],
+            ['Antoine', 'Lefebvre',  'antoine.lefebvre@apprenant.fr'],
+            ['Ines',    'Leroy',     'ines.leroy@apprenant.fr'],
+            ['Maxime',  'Roux',      'maxime.roux@apprenant.fr'],
+            ['Camille', 'Girard',    'camille.girard@apprenant.fr'],
         ];
 
         $ids = [];
         foreach ($apprenants as $a) {
             $ids[] = DB::table('users')->insertGetId([
-                'name'       => $a[0],
-                'email'      => $a[1],
+                'prenom'     => $a[0],
+                'nom'        => $a[1],
+                'name'       => $a[0] . ' ' . $a[1],
+                'email'      => $a[2],
                 'password'   => Hash::make('password'),
                 'role'       => 'apprenant',
                 'created_at' => $now,
