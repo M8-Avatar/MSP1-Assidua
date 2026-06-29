@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Connexion') — Assidua</title>
-        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 <body style="margin:0;padding:0;">
@@ -16,14 +16,9 @@
 
         {{-- Logo top-left --}}
         <div style="position:absolute;top:32px;left:40px;z-index:2">
-            <img src="{{ asset('images/logo-assidua.svg') }}"
-                 style="height:36px;width:auto;filter:brightness(0) invert(1)"
-                 alt="Assidua"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <span style="display:none;font-size:24px;font-weight:700;color:#fff;
-                         font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.5px">
-                Assidua
-            </span>
+            <img src="{{ asset('images/logo-vertical.png') }}"
+                 style="height:80px;width:auto;filter:brightness(0) invert(1)"
+                 alt="Assidua">
         </div>
 
         {{-- Cercles décoratifs --}}
@@ -31,8 +26,8 @@
         <div style="position:absolute;bottom:-100px;left:-100px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,0.045);pointer-events:none"></div>
 
         {{-- Logo sur carte blanche --}}
-        <div style="background:#fff;border-radius:20px;padding:26px 48px;box-shadow:0 24px 64px rgba(0,0,0,.22);margin-bottom:48px;position:relative;z-index:1">
-            <span style="font-size:1.5rem;font-weight:700;color:#1E8296;letter-spacing:-0.02em;">Assidua</span>
+        <div style="background:#fff;border-radius:20px;padding:20px 40px;box-shadow:0 24px 64px rgba(0,0,0,.22);margin-bottom:48px;position:relative;z-index:1">
+            <img src="{{ asset('images/logo-horizontal.png') }}" style="height:32px;width:auto" alt="Assidua">
         </div>
 
         <h2 style="color:#fff;font-size:1.4375rem;font-weight:700;text-align:center;max-width:400px;line-height:1.45;margin-bottom:14px;position:relative;z-index:1">
@@ -67,14 +62,7 @@
 
             {{-- Logo au-dessus du formulaire --}}
             <div style="margin-bottom:32px;text-align:center">
-                <img src="{{ asset('images/logo-assidua.svg') }}"
-                     style="height:32px;width:auto"
-                     alt="Assidua"
-                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
-                <span style="display:none;font-size:20px;font-weight:700;color:#1E8296;
-                             font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.5px">
-                    Assidua
-                </span>
+                <img src="{{ asset('images/logo-horizontal.png') }}" style="height:32px;width:auto" alt="Assidua">
             </div>
 
             @yield('content')

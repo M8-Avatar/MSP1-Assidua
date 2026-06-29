@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Tableau de bord') — Assidua</title>
         <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -28,7 +29,7 @@
 
         {{-- Logo --}}
         <div style="padding:24px 20px 8px;border-bottom:1px solid #EDF0F5;margin-bottom:8px">
-            <span style="font-size:1.1875rem;font-weight:700;color:#1E8296;letter-spacing:-.02em">Assidua</span>
+            <img src="{{ asset('images/logo-horizontal.png') }}" style="height:28px;width:auto" alt="Assidua">
         </div>
 
         {{-- Navigation --}}
