@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('statut', 20);
             $table->string('observation', 255)->nullable();
             $table->timestamps();
-
             $table->unique(['inscription_id', 'date']);
         });
 
-        // Contrainte CHECK sur statut
-        DB::statement("ALTER TABLE presences ADD CONSTRAINT check_statut 
-            CHECK (statut IN ('present', 'absent', 'retard', 'absent_justifie'))");
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE presences ADD CONSTRAINT check_statut
+                CHECK (statut IN ('present', 'absent', 'retard', 'absent_justifie'))");
+        }
     }
 
     public function down(): void

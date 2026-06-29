@@ -13,12 +13,16 @@ return new class extends Migration
             $table->string('role', 20)->default('apprenant')->after('password');
         });
 
-        DB::statement("ALTER TABLE users ADD CONSTRAINT chk_users_role CHECK (role IN ('admin', 'apprenant'))");
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE users ADD CONSTRAINT chk_users_role CHECK (role IN ('admin', 'apprenant'))");
+        }
     }
 
     public function down(): void
     {
-        DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS chk_users_role');
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE users DROP CONSTRAINT IF EXISTS chk_users_role');
+        }
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('role');
         });
