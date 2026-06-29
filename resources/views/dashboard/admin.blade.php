@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Admin')
 @section('page-title', 'Tableau de bord')
-@section('page-subtitle', 'Vue d''ensemble — ' . now()->translatedFormat('l d F Y'))
+@section('page-subtitle', "Vue d'ensemble — " . now()->translatedFormat('l d F Y'))
 
 @section('content')
 

@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
             $sessions_recentes = DB::table('presences')
                 ->join('inscriptions', 'presences.inscription_id', '=', 'inscriptions.id')
-                ->join('formations', 'inscriptions.formations_id', '=', 'formations.id')
+                ->join('formations', 'inscriptions.formation_id', '=', 'formations.id')
                 ->select(
                     'presences.date',
                     'formations.nom',
@@ -83,7 +83,7 @@ class DashboardController extends Controller
             if ($inscription) {
                 $presences_recentes = DB::table('presences')
                     ->join('inscriptions', 'presences.inscription_id', '=', 'inscriptions.id')
-                    ->join('formations', 'inscriptions.formations_id', '=', 'formations.id')
+                    ->join('formations', 'inscriptions.formation_id', '=', 'formations.id')
                     ->where('presences.inscription_id', $inscription->id)
                     ->select('presences.*', 'formations.nom as formation_nom')
                     ->orderByDesc('presences.date')
