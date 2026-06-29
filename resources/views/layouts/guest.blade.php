@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Connexion') — Assidua</title>
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 <body style="margin:0;padding:0;">
@@ -12,6 +13,19 @@
 
     {{-- Panneau gauche teal --}}
     <div class="guest-brand">
+
+        {{-- Logo top-left --}}
+        <div style="position:absolute;top:32px;left:40px;z-index:2">
+            <img src="{{ asset('images/logo-assidua.svg') }}"
+                 style="height:36px;width:auto;filter:brightness(0) invert(1)"
+                 alt="Assidua"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span style="display:none;font-size:24px;font-weight:700;color:#fff;
+                         font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.5px">
+                Assidua
+            </span>
+        </div>
+
         {{-- Cercles décoratifs --}}
         <div style="position:absolute;top:-140px;right:-140px;width:560px;height:560px;border-radius:50%;background:rgba(255,255,255,0.055);pointer-events:none"></div>
         <div style="position:absolute;bottom:-100px;left:-100px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,0.045);pointer-events:none"></div>
@@ -50,7 +64,21 @@
     {{-- Panneau droit formulaire --}}
     <div class="guest-form-panel">
         <div style="width:100%;max-width:380px">
+
+            {{-- Logo au-dessus du formulaire --}}
+            <div style="margin-bottom:32px;text-align:center">
+                <img src="{{ asset('images/logo-assidua.svg') }}"
+                     style="height:32px;width:auto"
+                     alt="Assidua"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+                <span style="display:none;font-size:20px;font-weight:700;color:#1E8296;
+                             font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-0.5px">
+                    Assidua
+                </span>
+            </div>
+
             @yield('content')
+
             <p style="text-align:center;font-size:.75rem;color:#AAB8C2;margin-top:44px">
                 © {{ date('Y') }} Assidua · Tous droits réservés
             </p>

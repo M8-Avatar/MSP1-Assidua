@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'Tableau de bord')
 @section('page-title', 'Tableau de bord')
 @section('page-subtitle', "Vue d'ensemble — " . now()->translatedFormat('l d F Y'))
 
